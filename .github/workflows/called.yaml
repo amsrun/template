@@ -7,6 +7,7 @@ on:
 jobs:
   print-env:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Print environment variable
         run: echo ${{ vars.VAR }}
