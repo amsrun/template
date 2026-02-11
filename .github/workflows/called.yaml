@@ -2,6 +2,7 @@ name: Reusable Print Environment Variable
 
 on:
   workflow_call:
+  dispatch:
 
 jobs:
   print-env:
