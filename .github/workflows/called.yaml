@@ -13,4 +13,4 @@ jobs:
     environment: production
     steps:
       - run: |
-          echo "${{ secrets.VAR }}"
+          echo "${{ vars.VAR }}"
