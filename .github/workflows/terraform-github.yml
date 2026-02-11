@@ -1,4 +1,4 @@
-name: Terraform Environments
+name: Terraform GitHub
 
 on:
   workflow_dispatch:
