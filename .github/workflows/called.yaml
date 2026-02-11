@@ -5,7 +5,7 @@ on:
     # Map the workflow outputs to job outputs
     secrets:
       VAR:
-        required: true
+        required: false
 
 jobs:
   my-dynamic-env-job:
