@@ -1,0 +1,11 @@
+name: Reusable Print Environment Variable
+
+on:
+  workflow_call:
+
+jobs:
+  print-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print environment variable
+        run: echo ${{ env.VAR }}
