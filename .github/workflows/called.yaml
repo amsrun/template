@@ -2,10 +2,6 @@ name: Reusable Print Environment Variable
 
 on:
   workflow_call:
-    # Map the workflow outputs to job outputs
-    secrets:
-      VAR:
-        required: false
 
 jobs:
   my-dynamic-env-job:
