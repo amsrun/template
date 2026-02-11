@@ -2,6 +2,11 @@ name: Reusable Print Environment Variable
 
 on:
   workflow_call:
+    inputs:
+      VAR:
+        description: 'The environment variable to print'
+        required: true
+        type: string
   workflow_dispatch:
 
 jobs:
