@@ -14,5 +14,5 @@ variable "environment_secrets" {
   description = "Map of environment name to secret name/value pairs."
   type        = map(map(string))
   default     = {}
-  sensitive   = true
+  # sensitive   = true
 }
