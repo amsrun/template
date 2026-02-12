@@ -10,11 +10,28 @@ locals {
   ])
 }
 
+# ========== Create a 'development' environment
+resource "github_repository_environment" "development" {
+  repository  = github_repository.next.name
+  environment = "development"
+
+  deployment_branch_policy {
+    protected_branches     = false
+    custom_branch_policies = true
+  }
+}
+
+resource "github_repository_environment_deployment_policy" "development" {
+  repository     = github_repository.next.name
+  environment    = github_repository_environment.development.environment
+  branch_pattern = "develop"
+}
+
 # ========== Create a 'staging' environment
 resource "github_repository_environment" "staging" {
   repository  = github_repository.next.name
   environment = "staging"
-  # Optional: add deployment branch policies or wait timers
+
   deployment_branch_policy {
     protected_branches     = false
     custom_branch_policies = true
@@ -69,6 +86,16 @@ resource "github_actions_environment_secret" "this" {
   plaintext_value = each.value.value
 }
 
+resource "github_actions_environment_variable" "this" {
+  for_each = {
+    for pair in local.environment_secret_pairs : "${pair.environment}.${pair.name}" => pair
+  }
+
+  repository      = github_repository.next.name
+  environment     = each.value.environment
+  variable_name   = format("%s_VAR", each.value.name)
+  value          = each.value.value
+}
 
 # Optional: Add an environment secret or variable
 # resource "github_actions_environment_variable" "example_variable" {
