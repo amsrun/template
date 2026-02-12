@@ -3,16 +3,10 @@ name: Scaffold New Repository
 on:
   workflow_dispatch:
     inputs:
-      owner:
-        description: 'GitHub Owner (user or org) for the new repository'
-        required: true
-        type: string
-        default: 'Zotec-Product-Development'
       repository:
         description: 'Name for the new repository (name only)'
         required: true
         type: string
-    secrets:
       token:
         description: 'GitHub Token with repo and workflow permissions'
         required: true
