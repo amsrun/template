@@ -12,13 +12,12 @@ on:
         required: false
         default: 'false'
         type: boolean
-    secrets:
       token:
         description: 'GitHub Token with repo and workflow permissions'
         required: true
 
 env:
-  TF_VAR_github_token: ${{ secrets.token }}
+  TF_VAR_github_token: ${{ inputs.token }}
   TF_VAR_github_repository: ${{ inputs.repository }}
   TF_VAR_environment_secrets: |
     {
@@ -37,7 +36,7 @@ defaults:
     shell: bash
     working-directory: .github/infra
 
-permissions: write-all
+# permissions: write-all
 
 jobs:
   terraform:
