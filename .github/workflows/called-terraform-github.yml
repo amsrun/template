@@ -62,6 +62,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        if: ${{ !inputs.apply }}
         run: terraform plan
 
       - name: Terraform Apply
