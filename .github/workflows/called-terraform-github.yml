@@ -16,6 +16,25 @@ on:
         description: 'GitHub Token with repo and workflow permissions'
         required: true
         type: string
+    secrets:
+      IAM_AWS_CICD_ACCESSKEY_DEV:
+        description: 'AWS Access Key for CICD in Development'
+        required: true
+      IAM_AWS_CICD_SECRETID_DEV:
+        description: 'AWS Secret Key for CICD in Development'
+        required: true
+      IAM_AWS_CICD_ACCESSKEY_STAGING:
+        description: 'AWS Access Key for CICD in Staging'
+        required: true
+      IAM_AWS_CICD_SECRETID_STAGING:
+        description: 'AWS Secret Key for CICD in Staging'
+        required: true
+      IAM_AWS_CICD_ACCESSKEY_PROD:
+        description: 'AWS Access Key for CICD in Production'
+        required: true
+      IAM_AWS_CICD_SECRETID_PROD:
+        description: 'AWS Secret Key for CICD in Production'
+        required: true
 
 env:
   TF_VAR_github_token: ${{ inputs.token }}

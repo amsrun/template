@@ -34,6 +34,7 @@ jobs:
       repository: ${{ inputs.repository }}
       token: ${{ inputs.token }}
       apply: false
+    secrets: inherit
 
   apply:
     needs: plan
@@ -42,6 +43,7 @@ jobs:
       repository: ${{ inputs.repository }}
       token: ${{ inputs.token }}
       apply: true
+    secrets: inherit
 
   seed-repository:
     needs: apply
