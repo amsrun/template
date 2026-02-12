@@ -17,14 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: env | grep GITHUB
-      - name: Checkout code
-        uses: actions/checkout@v4
-      # check to ensure the target repo doesn't exist before attempting to create it, and if it does exist, print a message to the console and skip the creation step instead of attempting to create the repository and failing the workflow
       - name: Check Repository
         id: create_repo
+        env:
+          GH_TOKEN: ${{ inputs.token }}
         run: |
           if gh repo view amsrun/${{ inputs.repository }} > /dev/null 2>&1; then
-            echo "Repository ${{ inputs.repository }} already exists. Skipping creation."
+            echo "::error::Repository ${{ inputs.repository }} already exists. Cannot proceed."
             exit 1
           fi
 
