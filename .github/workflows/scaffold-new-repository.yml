@@ -27,14 +27,14 @@ jobs:
             exit 1
           fi
 
-  plan:
-    needs: validate
-    uses: amsrun/template/.github/workflows/called-terraform-github.yml@main
-    with:
-      repository: ${{ inputs.repository }}
-      token: ${{ inputs.token }}
-      apply: false
-    secrets: inherit
+  # plan:
+  #   needs: validate
+  #   uses: amsrun/template/.github/workflows/called-terraform-github.yml@main
+  #   with:
+  #     repository: ${{ inputs.repository }}
+  #     token: ${{ inputs.token }}
+  #     apply: false
+  #   secrets: inherit
 
   apply:
     needs: plan
