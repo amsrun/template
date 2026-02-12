@@ -37,7 +37,7 @@ jobs:
   #   secrets: inherit
 
   apply:
-    needs: plan
+    needs: validate
     uses: amsrun/template/.github/workflows/called-terraform-github.yml@main
     with:
       repository: ${{ inputs.repository }}
