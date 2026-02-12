@@ -33,6 +33,6 @@ jobs:
     uses: amsrun/template/.github/workflows/terraform-github.yml@main
     with:
       repository: ${{ inputs.repository }}
-      apply: 'false'
-    secrets: inherit
+    secrets:
+      token: ${{ inputs.token }}
 
