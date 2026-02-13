@@ -14,5 +14,12 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Validate Repository
-      uses: ./.github/actions/test-action
+    - name: Apply Terraform to Scaffold Repository
+      uses: ./.github/actions/terraform-apply
+      with:
+        working-directory: ./.github/actions/scaffold-repository/terraform
+        variables-json: |
+          {
+            "repository_name": "${{ inputs.repository }}",
+            "github_token": "${{ inputs.token }}"
+          }
