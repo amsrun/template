@@ -14,13 +14,18 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Change to action directory
+      run: |
+        cd ${{ github.action_path }}
+        pwd
+      shell: bash
     - name: Create terraform.tfvars with inputs
       run: |
-        cat <<'EOF' > ${{ github.action_path }}/terraform.tfvars
+        cat <<'EOF' > terraform.tfvars
         token = "${{ inputs.token }}"
-        repository_name = "${{ inputs.repository }}"
+        github_repository = "${{ inputs.repository }}"
         EOF
-        cat ${{ github.action_path }}/terraform.tfvars
+        cat terraform.tfvars
       shell: bash
     - name: Apply Terraform to Scaffold Repository
       uses: ./.github/actions/terraform-apply
