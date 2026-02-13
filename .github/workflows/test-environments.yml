@@ -83,7 +83,7 @@ jobs:
   stage-four:
     runs-on: ubuntu-latest
     needs: stage-three
-    environment: def
+    environment: template
     steps:
       - name: Print custom message
         run: |
@@ -99,6 +99,10 @@ jobs:
 
       - name: Print all available context
         run: |
-          echo "GitHub Environment: ${{ github.environment }}"
-          echo "Workflow: ${{ github.workflow }}"
-          echo "Repository: ${{ github.repository }}"
+            echo "GitHub Environment: ${{ github.environment }}"
+            echo "Workflow: ${{ github.workflow }}"
+            echo "Repository: ${{ github.repository }}"
+            echo "Runnumber: ${{ github.run_number }}"
+            echo "RunID: ${{ github.run_id }}"
+            echo "Actor: ${{ github.actor }}"
+            echo "SHA: ${{ github.sha }}"
