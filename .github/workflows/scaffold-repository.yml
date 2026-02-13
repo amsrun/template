@@ -31,6 +31,8 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout template repository
+        uses: actions/checkout@v4
       - name: Scaffold Repository with Terraform
         id: scaffold_repo
         uses: ./.github/actions/scaffold-repository@main
