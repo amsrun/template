@@ -1,0 +1,117 @@
+name: Tag Release
+description: Create and optionally push a git tag for the current release
+
+inputs:
+  tag:
+    description: Optional tag name to create (for example, 25.02.13.1). Defaults to date.
+    required: false
+    default: ''
+    type: string
+  release:
+    description: Whether to append _REL to the tag
+    required: false
+    default: 'false'
+    type: string
+  token:
+    description: GitHub token used to checkout and push the tag
+    required: false
+    default: ${{ github.token }}
+    type: string
+  push:
+    description: Whether to push the created tag to origin
+    required: false
+    default: 'true'
+    type: string
+  annotated:
+    description: Whether to create an annotated tag
+    required: false
+    default: 'true'
+    type: string
+  message:
+    description: Tag message (only used for annotated tags). Defaults to "Release <tag>".
+    required: false
+    default: ''
+    type: string
+  commit:
+    description: Optional commit SHA to tag; defaults to HEAD
+    required: false
+    default: ''
+    type: string
+
+outputs:
+  tag:
+    description: The tag that was created
+    value: ${{ steps.create-tag.outputs.tag }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ inputs.token }}
+
+    - name: Configure git user
+      shell: bash
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Create tag
+      id: create-tag
+      shell: bash
+      env:
+        TAG: ${{ inputs.tag }}
+        MESSAGE: ${{ inputs.message }}
+        COMMIT: ${{ inputs.commit }}
+        ANNOTATED: ${{ inputs.annotated }}
+        IS_RELEASE: ${{ inputs.release }}
+      run: |
+        set -euo pipefail
+
+        if [[ -z "$TAG" ]]; then
+          TAG="$(date +'%y.%m.%d')"
+        fi
+
+        if [[ "$IS_RELEASE" == "true" ]]; then
+          TAG="${TAG}_REL"
+        fi
+
+        if [[ -z "$MESSAGE" ]]; then
+          MESSAGE="Release $TAG"
+        fi
+
+        if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+          echo "Tag $TAG already exists." >&2
+          exit 1
+        fi
+
+        target_ref=""
+        if [[ -n "$COMMIT" ]]; then
+          target_ref="$COMMIT"
+        fi
+
+        if [[ "$ANNOTATED" == "true" ]]; then
+          if [[ -n "$target_ref" ]]; then
+            git tag -a "$TAG" -m "$MESSAGE" "$target_ref"
+          else
+            git tag -a "$TAG" -m "$MESSAGE"
+          fi
+        else
+          if [[ -n "$target_ref" ]]; then
+            git tag "$TAG" "$target_ref"
+          else
+            git tag "$TAG"
+          fi
+        fi
+
+        echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+    - name: Push tag
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      env:
+        TAG: ${{ steps.create-tag.outputs.tag }}
+      run: |
+        git push origin "refs/tags/$TAG"
