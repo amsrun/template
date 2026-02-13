@@ -1,32 +1,6 @@
 name: 'Simple Test Action'
 description: 'A simple composite action that runs tests'
 
-inputs:
-  test-path:
-    description: 'Path to run tests from'
-    required: false
-    default: './'
-
-  timeout:
-    description: 'Test timeout in seconds'
-    required: false
-    default: '300'
-
-  org-var:
-    description: 'Organization-level variable'
-    required: false
-    default: 'default-org-value'
-
-  repo-var:
-    description: 'Repository-level variable'
-    required: false
-    default: 'default-repo-value'
-
-outputs:
-  result:
-    description: 'Test result status'
-    value: ${{ steps.run-tests.outputs.status }}
-
 runs:
   using: 'composite'
   steps:

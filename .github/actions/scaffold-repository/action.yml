@@ -1,0 +1,18 @@
+name: Scaffold New Repository
+description: 'Scaffolds a new repository with Terraform configuration to create the repository'
+
+inputs:
+  repository:
+    description: 'Name for the new repository (name only)'
+    required: true
+    type: string
+  token:
+    description: 'GitHub Token with repo and workflow permissions'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate Repository
+      uses: ./.github/actions/test-action@main
