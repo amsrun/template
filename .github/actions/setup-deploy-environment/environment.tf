@@ -94,6 +94,12 @@ resource "github_actions_environment_secret" "this" {
   environment     = each.value.environment
   secret_name     = each.value.name
   plaintext_value = each.value.value
+
+  depends_on = [
+    github_repository_environment.development,
+    github_repository_environment.staging,
+    github_repository_environment.production
+  ]
 }
 
 resource "github_actions_environment_variable" "this" {
@@ -105,4 +111,10 @@ resource "github_actions_environment_variable" "this" {
   environment   = each.value.environment
   variable_name = each.value.name
   value         = each.value.value
+
+  depends_on = [
+    github_repository_environment.development,
+    github_repository_environment.staging,
+    github_repository_environment.production
+  ]
 }
