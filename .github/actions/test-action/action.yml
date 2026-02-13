@@ -30,11 +30,14 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Show Action Path'
+      shell: bash
+      run: echo $GITHUB_ACTION_PATH
     - name: 'Test Variables'
       shell: bash
       run: |
         echo "org var: ${{ inputs.org-var }}"
-        echo "repo var: ${{ inputs.repo-var }}"
+        echo "repo var (input): ${{ inputs.repo-var }}"
     - name: 'Run Tests'
       id: run-tests
       shell: bash
