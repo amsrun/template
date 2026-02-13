@@ -20,6 +20,11 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Test Variables'
+      shell: bash
+      run: |
+        echo "org var: ${{ env.ORG_VAR }}"
+        echo "repo var: ${{ env.REPO_VAR }}"
     - name: 'Run Tests'
       id: run-tests
       shell: bash
