@@ -28,7 +28,7 @@ jobs:
   #         fi
 
   terraform:
-    needs: validate
+    # needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Checkout template repository
