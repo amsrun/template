@@ -19,18 +19,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - name: Check if branch already exists
-      shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.token }}
-        REPO_NAME: ${{ inputs.repository }}
-        BRANCH_NAME: ${{ inputs.branch }}
-      run: |
-        if git ls-remote --heads "https://${GH_TOKEN}@github.com/amsrun/${REPO_NAME}.git" "${BRANCH_NAME}" | grep -q "${BRANCH_NAME}"; then
-          echo "✅ Branch '${BRANCH_NAME}' already exists in repository '${REPO_NAME}'. Nothing to do."
-          exit 0
-        fi
-
     - name: Prepare seed files
       shell: bash
       run: |

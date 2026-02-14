@@ -125,7 +125,20 @@ jobs:
       - name: Checkout template repository
         uses: actions/checkout@v4
 
+      - name: Check if branch already exists
+        id: check_branch
+        env:
+          GH_TOKEN: ${{ inputs.token }}
+        run: |
+          if gh api repos/amsrun/${{ inputs.repository }}/branches/${{ inputs.default_branch }} > /dev/null 2>&1; then
+            echo "✅ Branch '${{ inputs.default_branch }}' already exists. Skipping scaffold."
+            echo "branch_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "branch_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create Default Branch from Template
+        if: ${{ steps.check_branch.outputs.branch_exists != 'true' }}
         id: scaffold_default_branch
         uses: ./.github/actions/scaffold-default-branch
         with:
