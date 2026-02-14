@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       repository:
-        description: 'Name for the new repository (name only)'
+        description: 'Name (only) for the new/existing repository'
         required: true
         type: string
       token:
-        description: 'GitHub Token with repo and workflow permissions'
+        description: 'GitHub token with repo permissions'
         required: true
         type: string
       create_repository:
@@ -16,7 +16,7 @@ on:
         required: false
         default: false
         type: boolean
-      create_deployment_environment:
+      create_environment:
         description: 'Create deployment environment for the repository'
         required: false
         default: false
@@ -79,9 +79,9 @@ jobs:
             github_repository = "${{ inputs.repository }}"
 
       - name: Setup Deployment Environment with Terraform
-        if: ${{ inputs.create_deployment_environment }}
+        if: ${{ inputs.create_environment }}
         id: setup_deployment_environment
-        uses: ./.github/actions/scaffold-deploy-environment
+        uses: ./.github/actions/scaffold-environment
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
