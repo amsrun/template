@@ -27,7 +27,12 @@ on:
         default: 'develop'
         type: string
       infra_name:
-        description: 'Name for the infrastructure project (leave empty to skip)'
+        description: 'Infrastructure project name (leave empty to skip)'
+        required: false
+        default: ''
+        type: string
+      ecr_repository:
+        description: 'ECR repository name (leave empty to skip)'
         required: false
         default: ''
         type: string
@@ -66,15 +71,15 @@ jobs:
     if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && inputs.create_repository }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout template repository
-        uses: actions/checkout@v4
+      # - name: Checkout template repository
+      #   uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v3
 
       - name: Scaffold Repository with Terraform
         id: scaffold_repo
-        uses: ./.github/actions/scaffold-repository
+        uses: ./actions/scaffold-repository
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
@@ -87,15 +92,15 @@ jobs:
     if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && inputs.create_environment }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout template repository
-        uses: actions/checkout@v4
+      # - name: Checkout template repository
+      #   uses: actions/checkout@v4
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v3
 
       - name: Setup Deployment Environment with Terraform
         id: setup_deployment_environment
-        uses: ./.github/actions/scaffold-environment
+        uses: ./actions/scaffold-environment
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
@@ -134,8 +139,8 @@ jobs:
               }
             }
             repository_variables = {
-              "INFRASTRUCTURE_PROJECT": "${{ inputs.infra_name }}"
-              "ECR_REPOSITORY": "${{ inputs.infra_name }}"
+              "INFRASTRUCTURE_PROJECT": "${{ inputs.infra_name }}",
+              "ECR_REPOSITORY": "${{ inputs.ecr_repository }}"
             }
 
   scaffold-default-branch:
@@ -161,7 +166,7 @@ jobs:
       - name: Create Default Branch from Template
         if: ${{ steps.check_branch.outputs.branch_exists != 'true' }}
         id: scaffold_default_branch
-        uses: ./.github/actions/scaffold-default-branch
+        uses: ./actions/scaffold-default-branch
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
