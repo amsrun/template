@@ -8,10 +8,10 @@ inputs:
     default: ''
     type: string
   release:
-    description: Whether to append _REL to the tag
+    description: Create a GitHub release for the tag. Defaults to false.
     required: false
-    default: 'false'
-    type: string
+    default: false
+    type: boolean
   token:
     description: GitHub token used to checkout and push the tag
     required: false
@@ -20,13 +20,13 @@ inputs:
   push:
     description: Whether to push the created tag to origin
     required: false
-    default: 'true'
-    type: string
+    default: true
+    type: boolean
   annotated:
     description: Whether to create an annotated tag
     required: false
-    default: 'true'
-    type: string
+    default: true
+    type: boolean
   message:
     description: Tag message (only used for annotated tags). Defaults to "Release <tag>".
     required: false
@@ -111,9 +111,17 @@ runs:
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
     - name: Push tag
-      if: ${{ inputs.push == 'true' }}
+      if: ${{ inputs.push }}
       shell: bash
       env:
         TAG: ${{ steps.create-tag.outputs.tag }}
       run: |
         git push origin "refs/tags/$TAG"
+    - name: Create release
+      if: ${{ inputs.release }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        TAG: ${{ steps.create-tag.outputs.tag }}
+      run: |
+          gh release create "${TAG}" --repo "${GITHUB_REPOSITORY}" --title "${TAG}" --generate-notes
