@@ -22,23 +22,11 @@ runs:
     - name: Prepare seed files
       shell: bash
       run: |
-        # Create a temporary directory for the new repo
-        # mkdir -p /tmp/new-repo/.github/workflows
-
-        # # Copy template files (adjust paths as needed)
-        # cp -r .github/workflows /tmp/new-repo/.github/ 2>/dev/null || echo "No templates directory"
-        # cp LICENSE.txt /tmp/new-repo/ 2>/dev/null || echo "No LICENSE"
-        # cp README.md /tmp/new-repo/ 2>/dev/null || echo "No README"
-
-        # You can add more files to copy here
-        # cp -r src /tmp/new-repo/
-        # cp -r config /tmp/new-repo/
-
-        cp -r ./repository_seed /tmp/new-repo
-        ls -la /tmp/new-repo
+        cp -r ./repository_seed /tmp/new-branch
+        ls -la /tmp/new-branch
 
     - name: Initialize the repository
-      working-directory: /tmp/new-repo
+      working-directory: /tmp/new-branch
       shell: bash
       run: |
         git init
@@ -52,7 +40,7 @@ runs:
         git branch -M ${{ inputs.branch }}
 
     - name: Set up remote origin with token
-      working-directory: /tmp/new-repo
+      working-directory: /tmp/new-branch
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}
@@ -65,7 +53,7 @@ runs:
         git remote -v
 
     - name: Push to new repository
-      working-directory: /tmp/new-repo
+      working-directory: /tmp/new-branch
       shell: bash
       env:
         GH_TOKEN: ${{ inputs.token }}

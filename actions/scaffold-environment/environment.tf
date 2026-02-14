@@ -124,7 +124,10 @@ resource "github_actions_environment_variable" "this" {
 # ========== Create repository variables
 
 resource "github_actions_variable" "this" {
-  for_each = var.repository_variables
+  for_each = {
+    for key, value in var.repository_variables : key => value
+    if value != ""
+  }
 
   repository    = data.github_repository.this.name
   variable_name = each.key

@@ -21,8 +21,8 @@ on:
         required: false
         default: true
         type: boolean
-      default_branch:
-        description: 'Name of the default branch to create from template (leave empty to skip)'
+      branch_name:
+        description: 'Name of the new branch to create from template (leave empty to skip)'
         required: false
         default: ''
         type: string
@@ -143,9 +143,9 @@ jobs:
               "ECR_REPOSITORY": "${{ inputs.ecr_repository }}"
             }
 
-  scaffold-default-branch:
+  scaffold-branch:
     needs: [check-repo-availability, check-repo-existence, scaffold-repository]
-    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && inputs.default_branch != '' }}
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') && inputs.branch_name != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout template repository
@@ -156,8 +156,8 @@ jobs:
         env:
           GH_TOKEN: ${{ inputs.token }}
         run: |
-          if gh api repos/amsrun/${{ inputs.repository }}/branches/${{ inputs.default_branch }} > /dev/null 2>&1; then
-            echo "✅ Branch '${{ inputs.default_branch }}' already exists. Skipping scaffold."
+          if gh api repos/amsrun/${{ inputs.repository }}/branches/${{ inputs.branch_name }} > /dev/null 2>&1; then
+            echo "✅ Branch '${{ inputs.branch_name }}' already exists. Skipping scaffold."
             echo "branch_exists=true" >> $GITHUB_OUTPUT
           else
             echo "branch_exists=false" >> $GITHUB_OUTPUT
@@ -165,9 +165,9 @@ jobs:
 
       - name: Create Default Branch from Template
         if: ${{ steps.check_branch.outputs.branch_exists != 'true' }}
-        id: scaffold_default_branch
-        uses: ./actions/scaffold-default-branch
+        id: scaffold_branch_name
+        uses: ./actions/scaffold-branch
         with:
           repository: ${{ inputs.repository }}
           token: ${{ inputs.token }}
-          branch: ${{ inputs.default_branch }}
+          branch: ${{ inputs.branch_name }}
