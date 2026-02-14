@@ -24,7 +24,7 @@ on:
       default_branch:
         description: 'Name of the default branch to create from template (leave empty to skip)'
         required: false
-        default: 'develop'
+        default: ''
         type: string
       infra_name:
         description: 'Infrastructure project name (leave empty to skip)'
