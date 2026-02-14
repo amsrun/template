@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       repository:
-        description: 'Name of the target repository'
+        description: 'Repository name (only)'
         required: true
         type: string
       token:
@@ -17,7 +17,7 @@ on:
         default: true
         type: boolean
       create_environment:
-        description: 'Create deployment environments for the repository'
+        description: 'Create deployment environments'
         required: false
         default: true
         type: boolean
