@@ -1,0 +1,54 @@
+name: 'ECR Tag'
+description: 'Tags an image in Amazon ECR with specified tags'
+
+inputs:
+  repository:
+    description: 'The ECR repository name'
+    required: true
+  source-tag:
+    description: 'The source image tag to tag'
+    required: true
+  tags:
+    description: 'Comma-separated list of tags to apply'
+    required: true
+  aws-region:
+    description: 'AWS region'
+    required: true
+    default: 'us-east-2'
+  registry:
+    description: 'The ECR registry URL'
+    required: true
+    default: "559587901710.dkr.ecr.us-east-2.amazonaws.com"
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Validate inputs'
+      shell: bash
+      run: |
+        echo "Registry: ${{ inputs.registry }}"
+        echo "Repository: ${{ inputs.repository }}"
+        echo "Source Tag: ${{ inputs.source-tag }}"
+        echo "Tags: ${{ inputs.tags }}"
+        echo "AWS Region: ${{ inputs.aws-region }}"
+
+    - name: 'Tag ECR image'
+      if: false # Temporarily disable to prevent accidental execution
+      shell: bash
+      env:
+        AWS_REGION: ${{ inputs.aws-region }}
+      run: |
+        IFS=',' read -ra TAG_ARRAY <<< "${{ inputs.tags }}"
+        for tag in "${TAG_ARRAY[@]}"; do
+          tag_trimmed=$(echo "$tag" | xargs)
+          echo "Tagging image with: $tag_trimmed"
+          aws ecr batch-get-image \
+            --repository-name ${{ inputs.repository }} \
+            --image-ids imageTag=${{ inputs.source-tag }} \
+            --region $AWS_REGION | \
+          aws ecr put-image \
+            --repository-name ${{ inputs.repository }} \
+            --image-tag "$tag_trimmed" \
+            --region $AWS_REGION
+        done
